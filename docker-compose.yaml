@@ -1,0 +1,39 @@
+services:
+  moodle:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PHP_INI_max_input_vars: 5000
+      PHP_INI_upload_max_filesize: 100M
+      PHP_INI_post_max_size: 100M
+      PHP_INI_memory_limit: 512M
+    volumes:
+      - moodledata:/var/www/moodledata
+    depends_on:
+      - db
+    expose:
+      - "80"
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: moodle
+      POSTGRES_USER: moodle
+      POSTGRES_PASSWORD: ${SERVICE_PASSWORD_POSTGRES}
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+
+  cron:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - moodledata:/var/www/moodledata
+    depends_on:
+      - db
+    command: bash -c "while true; do php /var/www/html/admin/cli/cron.php; sleep 60; done"
+
+volumes:
+  moodledata:
+  postgresdata:
