@@ -9,7 +9,7 @@ services:
       PHP_INI_post_max_size: 100M
       PHP_INI_memory_limit: 512M
     volumes:
-      - moodledata:/var/www/moodledata
+      - moodledata:/var/www/moodledata      
     depends_on:
       - db
     expose:

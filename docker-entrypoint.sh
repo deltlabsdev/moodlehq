@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 set -e
 
@@ -9,11 +10,8 @@ CONFIG_FILE="/var/www/html/config.php"
 if [ -f "$CONFIG_FILE" ]; then
     sed -i "s#\$CFG->wwwroot = .*#\$CFG->wwwroot = 'https://mdl.deltlabs.net';#" "$CONFIG_FILE"
 
-    if grep -q "sslproxy" "$CONFIG_FILE"; then
-        sed -i "s#\$CFG->sslproxy = .*#\$CFG->sslproxy = true;#" "$CONFIG_FILE"
-    else
-        sed -i "/\$CFG->wwwroot/a \$CFG->sslproxy = true;" "$CONFIG_FILE"
-    fi
+    sed -i "/\$CFG->sslproxy = true;/d" "$CONFIG_FILE"
+    echo "\$CFG->sslproxy = true;" >> "$CONFIG_FILE"
 fi
 
 exec "$@"
