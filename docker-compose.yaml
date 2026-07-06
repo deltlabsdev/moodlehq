@@ -9,7 +9,8 @@ services:
       PHP_INI_post_max_size: 100M
       PHP_INI_memory_limit: 512M
     volumes:
-      - moodledata:/var/www/moodledata      
+      - moodledata:/var/www/moodledata
+      - moodlehtml:/var/www/html
     depends_on:
       - db
     expose:
@@ -30,10 +31,12 @@ services:
       dockerfile: Dockerfile
     volumes:
       - moodledata:/var/www/moodledata
+      - moodlehtml:/var/www/html
     depends_on:
       - db
     command: bash -c "while true; do php /var/www/html/admin/cli/cron.php; sleep 60; done"
 
 volumes:
   moodledata:
+  moodlehtml:
   postgresdata:
